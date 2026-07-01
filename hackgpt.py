@@ -388,7 +388,7 @@ class ToolManager:
     
     def _run_pipeline(self, command, timeout=300):
         """Run cmd1 | cmd2 | ... without shell=True."""
-        segments = [shlex.split(seg.strip()) for seg in command.split('|')]
+        segments = self._split_pipeline(command)
         procs = []
         for i, args in enumerate(segments):
             stdin = procs[-1].stdout if procs else None
@@ -406,6 +406,26 @@ class ToolManager:
         for proc in procs[:-1]:
             proc.wait(timeout=timeout)
         return subprocess.CompletedProcess(segments[-1], procs[-1].returncode, stdout, stderr)
+
+    def _split_pipeline(self, command):
+        """Split a command on unquoted pipe separators."""
+        lexer = shlex.shlex(command, posix=True, punctuation_chars='|')
+        lexer.whitespace_split = True
+        tokens = list(lexer)
+        segments = [[]]
+
+        for token in tokens:
+            if token == '|':
+                if not segments[-1]:
+                    raise ValueError("Empty command in pipeline")
+                segments.append([])
+            else:
+                segments[-1].append(token)
+
+        if not segments[-1]:
+            raise ValueError("Empty command in pipeline")
+
+        return segments
 
     def run_command(self, command, timeout=300):
         """Execute a system command safely (never uses shell=True)."""
@@ -435,6 +455,13 @@ class ToolManager:
                 'success': False,
                 'stdout': '',
                 'stderr': f'Command timed out after {timeout} seconds',
+                'command': command
+            }
+        except ValueError as e:
+            return {
+                'success': False,
+                'stdout': '',
+                'stderr': str(e),
                 'command': command
             }
         except Exception as e:

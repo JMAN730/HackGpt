@@ -726,8 +726,19 @@ class EnterpriseHackGPT:
             self.console.print("[red]Flask not available for API server[/red]")
             return
         
-        from flask import Flask, request, jsonify
+        from flask import Flask, request, jsonify, Response
         from flask_cors import CORS
+        try:
+            from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+        except ImportError:
+            CONTENT_TYPE_LATEST = 'text/plain; version=0.0.4; charset=utf-8'
+
+            def generate_latest():
+                return (
+                    b"# HELP hackgpt_app_up HackGPT API metrics endpoint status\n"
+                    b"# TYPE hackgpt_app_up gauge\n"
+                    b"hackgpt_app_up 1\n"
+                )
         
         app = Flask(__name__)
         CORS(app)
@@ -740,6 +751,10 @@ class EnterpriseHackGPT:
                 "version": "2.0.0",
                 "timestamp": datetime.utcnow().isoformat()
             })
+
+        @app.route('/metrics', methods=['GET'])
+        def metrics():
+            return Response(generate_latest(), content_type=CONTENT_TYPE_LATEST)
         
         @app.route('/api/pentest/start', methods=['POST'])
         def start_pentest():

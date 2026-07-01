@@ -30,3 +30,13 @@ def test_run_command_pipe_without_shell(tool_manager):
     result = tool_manager.run_command(cmd)
     assert result["success"] is True
     assert "pipe" in result["stdout"]
+
+
+def test_pipeline_parser_preserves_quoted_pipe(tool_manager):
+    result = tool_manager._split_pipeline('grep -E "foo|bar" file.txt')
+    assert result == [["grep", "-E", "foo|bar", "file.txt"]]
+
+
+def test_pipeline_parser_splits_only_unquoted_pipes(tool_manager):
+    result = tool_manager._split_pipeline('cat file.txt | grep -E "foo|bar"')
+    assert result == [["cat", "file.txt"], ["grep", "-E", "foo|bar"]]
