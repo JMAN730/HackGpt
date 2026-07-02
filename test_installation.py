@@ -84,13 +84,13 @@ def test_permissions():
         print("  ❌ /reports directory not writable")
         reports_ok = False
     
-    # Test hackgpt.py executable
-    hackgpt_path = Path('./hackgpt.py')
+    # Test advance_hackgpt.py executable
+    hackgpt_path = Path('./advance_hackgpt.py')
     if hackgpt_path.exists() and os.access(hackgpt_path, os.X_OK):
-        print("  ✅ hackgpt.py is executable")
+        print("  ✅ advance_hackgpt.py is executable")
         script_ok = True
     else:
-        print("  ❌ hackgpt.py not executable")
+        print("  ❌ advance_hackgpt.py not executable")
         script_ok = False
     
     return reports_ok and script_ok, []
@@ -127,7 +127,7 @@ def run_basic_functionality_test():
     try:
         # Import the main HackGPT class
         sys.path.insert(0, '.')
-        from hackgpt import HackGPT, AIEngine, ToolManager
+        from advance_hackgpt import HackGPT, AIEngine, ToolManager
         
         print("  ✅ HackGPT imports successful")
         
@@ -178,9 +178,9 @@ def main():
     if all_passed:
         print("🎉 All tests passed! HackGPT is ready to use.")
         print("\nQuick start:")
-        print("  ./hackgpt.py                    # Interactive mode")
-        print("  ./hackgpt.py --web             # Web dashboard")
-        print("  ./hackgpt.py --voice           # Voice commands")
+        print("  ./advance_hackgpt.py            # Interactive mode")
+        print("  ./advance_hackgpt.py --web      # Web dashboard")
+        print("  ./advance_hackgpt.py --voice    # Voice commands")
     else:
         print("❌ Some tests failed. Issues found:")
         for issue in all_issues:

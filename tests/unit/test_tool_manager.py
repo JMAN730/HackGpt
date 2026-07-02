@@ -7,7 +7,7 @@ import pytest
 
 @pytest.fixture
 def tool_manager():
-    from hackgpt import ToolManager
+    from advance_hackgpt import ToolManager
 
     return ToolManager()
 

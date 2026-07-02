@@ -20,13 +20,21 @@ import requests
 # ML and AI imports
 try:
     import openai
+except ImportError as e:
+    logging.warning(f"openai not available: {e}")
+
+try:
     from transformers import pipeline, AutoTokenizer, AutoModel
     import torch
+except ImportError as e:
+    logging.warning(f"transformers or torch not available: {e}")
+
+try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.cluster import KMeans
     from sklearn.metrics.pairwise import cosine_similarity
 except ImportError as e:
-    logging.warning(f"Some AI dependencies not available: {e}")
+    logging.warning(f"sklearn dependencies not available: {e}")
 
 from database import get_db_manager, AIContext
 

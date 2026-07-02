@@ -4,7 +4,7 @@
 
 # 💰 Support HackGPT Enterprise Development
 
-![Version](https://img.shields.io/badge/version-2.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-2026.07.beta-green.svg)
 ![Donations](https://img.shields.io/badge/donations-welcome-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -204,8 +204,11 @@ All payment methods are verified and legitimate. For security concerns:
 
 ### 👨‍💻 **Connect with Yashab Alam**
 - 💻 **GitHub:** [@yashab-cyber](https://github.com/yashab-cyber)
-- 📸 **Instagram:** [@yashab.alam](https://www.instagram.com/yashab.alam)
+- 📸 **Instagram:** [@yashabcyber](https://www.instagram.com/yashabcyber)
+- 🐦 **X (Twitter):** [@Yashab_cyber](https://x.com/Yashab_cyber)
 - 💼 **LinkedIn:** [Yashab Alam](https://www.linkedin.com/in/yashab-alam)
+- 🧵 **Threads:** [@yashabcyber](https://www.threads.com/@yashabcyber)
+- 📧 **Emails:** [yashabalam9@gmail.com](mailto:yashabalam9@gmail.com) | [yashabalam707@gmail.com](mailto:yashabalam707@gmail.com)
 
 ## 📝 Alternative Support Methods
 

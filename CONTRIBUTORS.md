@@ -13,7 +13,7 @@ Thank you to all the amazing people who have contributed to making HackGPT Enter
 - 🏢 **Role**: Founder, CEO & Lead Developer
 - 🏛️ **Company**: ZehraSec
 - 💡 **Contributions**: Project architecture, AI integration, security frameworks, enterprise features
-- 🌐 **Connect**: [LinkedIn](https://linkedin.com/in/yashab-alam) | [Instagram](https://instagram.com/yashab.alam) | [Email](mailto:yashabalam707@gmail.com)
+- 🌐 **Connect**: [LinkedIn](https://linkedin.com/in/yashab-alam) | [Instagram](https://instagram.com/yashabcyber) | [X (Twitter)](https://x.com/Yashab_cyber) | [Threads](https://www.threads.com/@yashabcyber) | [Email](mailto:yashabalam9@gmail.com)
 - 🎯 **Specialties**: AI/ML, Cybersecurity, Penetration Testing, Enterprise Architecture
 
 ### 🏢 ZehraSec Team
@@ -242,13 +242,14 @@ Thank you to all the amazing people who have contributed to making HackGPT Enter
 ### 💬 Communication Platforms
 - **GitHub Issues**: [Bug reports and feature requests](https://github.com/yashab-cyber/HackGPT/issues)
 - **GitHub Discussions**: [Community discussions](https://github.com/yashab-cyber/HackGPT/discussions)
-- **Email**: yashabalam707@gmail.com
+- **Email**: yashabalam9@gmail.com | yashabalam707@gmail.com
 - **WhatsApp**: [Business Channel](https://whatsapp.com/channel/0029Vaoa1GfKLaHlL0Kc8k1q)
 
 ### 🌐 Social Media
 - **LinkedIn**: [Yashab Alam](https://linkedin.com/in/yashab-alam) | [ZehraSec](https://linkedin.com/company/zehrasec)
-- **Instagram**: [@yashab.alam](https://instagram.com/yashab.alam) | [@_zehrasec](https://instagram.com/_zehrasec)
-- **Twitter/X**: [@zehrasec](https://x.com/zehrasec)
+- **Instagram**: [@yashabcyber](https://instagram.com/yashabcyber) | [@_zehrasec](https://instagram.com/_zehrasec)
+- **Twitter/X**: [@Yashab_cyber](https://x.com/Yashab_cyber) | [@zehrasec](https://x.com/zehrasec)
+- **Threads**: [@yashabcyber](https://www.threads.com/@yashabcyber)
 - **Website**: [ZehraSec.com](https://www.zehrasec.com)
 
 ## 📈 Contribution Guidelines

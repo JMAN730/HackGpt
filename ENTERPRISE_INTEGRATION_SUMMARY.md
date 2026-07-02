@@ -12,7 +12,7 @@
 
 ### ✅ COMPLETED: Core Files Integration - All Improvements 1-7
 
-#### 1. **hackgpt_v2.py** (2500+ lines) - Enterprise Main Application
+#### 1. **advance_hackgpt.py** (2500+ lines) - Enterprise Main Application
 **Integrated Features:**
 - Database Integration (PostgreSQL + Redis)
 - Advanced AI Engine with ML pattern recognition
@@ -141,10 +141,10 @@
 
 ### 🚀 DEPLOYMENT OPTIONS
 
-1. **Standalone Mode**: `python3 hackgpt_v2.py`
-2. **API Server Mode**: `python3 hackgpt_v2.py --api`  
-3. **Web Dashboard Mode**: `python3 hackgpt_v2.py --web`
-4. **Direct Assessment**: `python3 hackgpt_v2.py --target <target> --scope <scope> --auth-key <key>`
+1. **Standalone Mode**: `python3 advance_hackgpt.py`
+2. **API Server Mode**: `python3 advance_hackgpt.py --api`  
+3. **Web Dashboard Mode**: `python3 advance_hackgpt.py --web`
+4. **Direct Assessment**: `python3 advance_hackgpt.py --target <target> --scope <scope> --auth-key <key>`
 5. **Enterprise Stack**: `docker-compose up -d` (full microservices deployment)
 
 ### 📊 ENTERPRISE METRICS
@@ -171,3 +171,14 @@
 ### 🎉 SUCCESS - ENTERPRISE TRANSFORMATION COMPLETE!
 
 HackGPT has been successfully transformed from a basic pentesting tool into a production-ready, enterprise-grade AI-powered cybersecurity platform with all 7 major improvements fully integrated and operational.
+
+
+---
+
+## 🔗 Connect with Developer & Founder
+Yashab Alam (Founder & CEO of ZehraSec)
+- **Instagram**: [https://www.instagram.com/yashabcyber](https://www.instagram.com/yashabcyber)
+- **X (Twitter)**: [https://x.com/Yashab_cyber](https://x.com/Yashab_cyber)
+- **LinkedIn**: [https://www.linkedin.com/in/yashab-alam](https://www.linkedin.com/in/yashab-alam)
+- **Threads**: [https://www.threads.com/@yashabcyber](https://www.threads.com/@yashabcyber)
+- **Email**: yashabalam9@gmail.com | yashabalam707@gmail.com

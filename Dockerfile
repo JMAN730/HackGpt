@@ -40,4 +40,4 @@ RUN mkdir -p /reports && chmod 755 /reports
 EXPOSE 5000
 
 # Set entry point
-ENTRYPOINT ["python3", "hackgpt.py"]
+ENTRYPOINT ["python3", "advance_hackgpt.py"]

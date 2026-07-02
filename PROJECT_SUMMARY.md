@@ -6,7 +6,7 @@ HackGPT is a production-ready AI-powered penetration testing automation tool des
 ## 📁 Project Structure
 ```
 HackGPT/
-├── hackgpt.py              # Main application (2,000+ lines)
+├── advance_hackgpt.py              # Main application (2,000+ lines)
 ├── requirements.txt        # Python dependencies
 ├── install.sh             # Automated installation script
 ├── test_installation.py   # Installation validation
@@ -94,10 +94,10 @@ chmod +x install.sh
 
 ### Usage Modes
 ```bash
-./hackgpt.py                              # Interactive CLI
-./hackgpt.py --target example.com --scope "Web app" --auth-key "AUTH123"
-./hackgpt.py --web                        # Web dashboard
-./hackgpt.py --voice                      # Voice commands
+./advance_hackgpt.py                              # Interactive CLI
+./advance_hackgpt.py --target example.com --scope "Web app" --auth-key "AUTH123"
+./advance_hackgpt.py --web                        # Web dashboard
+./advance_hackgpt.py --voice                      # Voice commands
 ```
 
 ### Docker Deployment
@@ -238,3 +238,14 @@ HackGPT represents a complete, production-ready AI-powered penetration testing s
 - **Extensible Architecture** for future enhancements
 
 The project demonstrates enterprise-level software development practices while maintaining the specialized requirements of the cybersecurity domain. It's ready for immediate deployment in authorized penetration testing environments.
+
+
+---
+
+## 🔗 Connect with Developer & Founder
+Yashab Alam (Founder & CEO of ZehraSec)
+- **Instagram**: [https://www.instagram.com/yashabcyber](https://www.instagram.com/yashabcyber)
+- **X (Twitter)**: [https://x.com/Yashab_cyber](https://x.com/Yashab_cyber)
+- **LinkedIn**: [https://www.linkedin.com/in/yashab-alam](https://www.linkedin.com/in/yashab-alam)
+- **Threads**: [https://www.threads.com/@yashabcyber](https://www.threads.com/@yashabcyber)
+- **Email**: yashabalam9@gmail.com | yashabalam707@gmail.com

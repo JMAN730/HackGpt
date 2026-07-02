@@ -1,9 +1,6 @@
-"""Smoke imports for the v1 entry point (used by ci.yml)."""
+"""Smoke imports for the advance_hackgpt entry point."""
 
-
-def test_hackgpt_core_classes_import():
-    from hackgpt import AIEngine, HackGPT, ToolManager
-
-    assert HackGPT is not None
-    assert AIEngine is not None
-    assert ToolManager is not None
+def test_advance_hackgpt_core_classes_import():
+    from advance_hackgpt import EnterpriseHackGPT, EnterpriseToolManager
+    assert EnterpriseHackGPT is not None
+    assert EnterpriseToolManager is not None

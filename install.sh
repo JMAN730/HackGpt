@@ -160,11 +160,11 @@ EOF
 fi
 
 # Make scripts executable
-chmod +x hackgpt.py hackgpt_v2.py install.sh usage_examples.sh test_installation.py
+chmod +x advance_hackgpt.py install.sh usage_examples.sh test_installation.py
 
 # Create symlink for global access
 echo "[+] Creating global command..."
-sudo ln -sf $(pwd)/hackgpt.py /usr/local/bin/hackgpt || warn "Failed to create global symlink"
+sudo ln -sf $(pwd)/advance_hackgpt.py /usr/local/bin/hackgpt || warn "Failed to create global symlink"
 
 echo ""
 echo "✅ Installation Complete!"
@@ -176,13 +176,12 @@ echo ""
 echo -e "${CYAN}Next steps:${NC}"
 echo -e "  1. Copy ${YELLOW}.env.example${NC} to ${YELLOW}.env${NC} and configure your API keys"
 echo -e "  2. Edit ${YELLOW}config.ini${NC} to customize settings"
-echo -e "  3. Run HackGPT: ${YELLOW}python3 hackgpt_v2.py${NC}"
-echo -e "  4. Or use the original version: ${YELLOW}python3 hackgpt.py${NC}"
+echo -e "  3. Run HackGPT: ${YELLOW}python3 advance_hackgpt.py${NC}"
 echo ""
 echo "Usage:"
-echo "  ./hackgpt.py                    # Interactive mode"
-echo "  ./hackgpt.py --web             # Web dashboard"
-echo "  ./hackgpt.py --voice           # Voice command mode"
+echo "  ./advance_hackgpt.py             # Interactive mode"
+echo "  ./advance_hackgpt.py --web       # Web dashboard"
+echo "  ./advance_hackgpt.py --voice     # Voice command mode"
 echo "  hackgpt                        # Global command (if symlink created)"
 echo ""
 echo "Set OpenAI API key (optional):"

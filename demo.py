@@ -13,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, '.')
 
 try:
-    from hackgpt import HackGPT, AIEngine, ToolManager, PentestingPhases
+    from advance_hackgpt import HackGPT, AIEngine, ToolManager, PentestingPhases
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -161,7 +161,7 @@ def demo_web_dashboard():
     console.print("  ⚙️  Configuration management")
     
     console.print("\n[cyan]To start web dashboard:[/cyan]")
-    console.print("  ./hackgpt.py --web")
+    console.print("  ./advance_hackgpt.py --web")
     console.print("  Then open: http://localhost:5000")
     console.print()
 
@@ -177,7 +177,7 @@ def demo_voice_interface():
     console.print("  🎤 'Exit'")
     
     console.print("\n[cyan]To start voice mode:[/cyan]")
-    console.print("  ./hackgpt.py --voice")
+    console.print("  ./advance_hackgpt.py --voice")
     console.print()
 
 def demo_reporting():
@@ -254,10 +254,19 @@ def main():
     
     console.print("[bold green]Demo completed![/bold green]")
     console.print("\n[cyan]Ready to use HackGPT? Run:[/cyan]")
-    console.print("  ./hackgpt.py                    # Interactive mode")
-    console.print("  ./hackgpt.py --web             # Web dashboard")
-    console.print("  ./hackgpt.py --voice           # Voice commands")
-    console.print("  ./hackgpt.py --help            # Show all options")
+    console.print("  ./advance_hackgpt.py                    # Interactive mode")
+    console.print("  ./advance_hackgpt.py --web             # Web dashboard")
+    console.print("  ./advance_hackgpt.py --voice           # Voice commands")
+    console.print("  ./advance_hackgpt.py --help            # Show all options")
 
 if __name__ == "__main__":
     main()
+
+
+# 🔗 Connect with Developer & Founder
+# Yashab Alam (Founder & CEO of ZehraSec)
+# Instagram: https://www.instagram.com/yashabcyber
+# X (Twitter): https://x.com/Yashab_cyber
+# LinkedIn: https://www.linkedin.com/in/yashab-alam
+# Threads: https://www.threads.com/@yashabcyber
+# Email: yashabalam9@gmail.com | yashabalam707@gmail.com

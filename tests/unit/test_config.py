@@ -1,11 +1,9 @@
-"""Config and credential defaults for both entry points."""
+"""Config and credential defaults for advance_hackgpt."""
 
 import os
-
 import pytest
 
-
-@pytest.mark.parametrize("module_name", ["hackgpt", "hackgpt_v2"])
+@pytest.mark.parametrize("module_name", ["advance_hackgpt"])
 def test_database_url_from_env_overrides_config(tmp_path, monkeypatch, module_name):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("DATABASE_URL", "postgresql://user:secret@db:5432/test")
@@ -14,8 +12,7 @@ def test_database_url_from_env_overrides_config(tmp_path, monkeypatch, module_na
     assert cfg.DATABASE_URL == "postgresql://user:secret@db:5432/test"
     assert "hackgpt123" not in cfg.DATABASE_URL
 
-
-@pytest.mark.parametrize("module_name", ["hackgpt", "hackgpt_v2"])
+@pytest.mark.parametrize("module_name", ["advance_hackgpt"])
 def test_default_config_has_no_hardcoded_password(tmp_path, monkeypatch, module_name):
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("DATABASE_URL", raising=False)

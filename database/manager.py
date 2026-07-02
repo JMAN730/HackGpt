@@ -79,11 +79,12 @@ class DatabaseManager:
             
             session.add(pentest_session)
             session.flush()  # Get the ID
+            session_id = pentest_session.id
             
-            self.log_action(created_by, 'create', 'pentest_session', pentest_session.id, 
-                          {'target': target, 'scope': scope})
-            
-            return pentest_session.id
+        self.log_action(created_by, 'create', 'pentest_session', session_id, 
+                      {'target': target, 'scope': scope})
+        
+        return session_id
     
     def get_pentest_session(self, session_id: str) -> Optional[PentestSession]:
         """Get pentest session by ID"""
@@ -92,9 +93,18 @@ class DatabaseManager:
             if result:
                 session.expunge(result)
             return result
+
+    def get_recent_sessions(self, limit: int = 50) -> List[PentestSession]:
+        """Get recent pentest sessions"""
+        with self.get_session() as session:
+            results = session.query(PentestSession).order_by(PentestSession.created_at.desc()).limit(limit).all()
+            for r in results:
+                session.expunge(r)
+            return results
     
     def update_session_status(self, session_id: str, status: str, user_id: str):
         """Update session status"""
+        old_status = None
         with self.get_session() as session:
             pentest_session = session.query(PentestSession).filter(PentestSession.id == session_id).first()
             if pentest_session:
@@ -103,8 +113,9 @@ class DatabaseManager:
                 if status == 'completed':
                     pentest_session.completed_at = datetime.utcnow()
                 
-                self.log_action(user_id, 'update', 'pentest_session', session_id,
-                              {'old_status': old_status, 'new_status': status})
+        if old_status is not None:
+            self.log_action(user_id, 'update', 'pentest_session', session_id,
+                          {'old_status': old_status, 'new_status': status})
     
     # Vulnerability management
     def create_vulnerability(self, session_id: str, phase: str, severity: str, title: str,
@@ -171,16 +182,20 @@ class DatabaseManager:
             return phase_result.id
     
     def update_phase_result(self, result_id: str, status: str, completed_at: datetime = None,
-                          execution_time: float = None):
+                          results: Dict[str, Any] = None, ai_analysis: str = None, execution_time: float = None):
         """Update phase result"""
         with self.get_session() as session:
             phase_result = session.query(PhaseResult).filter(PhaseResult.id == result_id).first()
             if phase_result:
                 phase_result.status = status
                 phase_result.completed_at = completed_at or datetime.utcnow()
-                if execution_time:
+                if results is not None:
+                    phase_result.results = results
+                if ai_analysis is not None:
+                    phase_result.ai_analysis = ai_analysis
+                if execution_time is not None:
                     phase_result.execution_time = execution_time
-    
+
     def get_phase_results(self, session_id: str) -> List[PhaseResult]:
         """Get all phase results for a session"""
         with self.get_session() as session:

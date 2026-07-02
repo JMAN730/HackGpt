@@ -13,7 +13,7 @@
   <p>
     <img src="https://img.shields.io/badge/Architecture-Microservices-red.svg" alt="Microservices">
     <img src="https://img.shields.io/badge/Cloud-Docker%20%7C%20Kubernetes-lightblue.svg" alt="Cloud Native">
-    <img src="https://img.shields.io/badge/Version-2.0.0-success.svg" alt="Version 2.0.0">
+    <img src="https://img.shields.io/badge/Version-2026.07.beta-success.svg" alt="Version 2026.07.beta">
     <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg" alt="Production Ready">
   </p>
 </div>
@@ -97,13 +97,13 @@ python3 test_installation.py
 source venv/bin/activate
 
 # Run enterprise application
-python3 hackgpt_v2.py
+python3 advance_hackgpt.py
 ```
 
 #### 2. API Server Mode
 ```bash
 # Start REST API server
-python3 hackgpt_v2.py --api
+python3 advance_hackgpt.py --api
 
 # API available at: http://localhost:8000
 # Health check: http://localhost:8000/api/health
@@ -112,7 +112,7 @@ python3 hackgpt_v2.py --api
 #### 3. Web Dashboard Mode
 ```bash
 # Start web dashboard
-python3 hackgpt_v2.py --web
+python3 advance_hackgpt.py --web
 
 # Dashboard available at: http://localhost:8080
 ```
@@ -133,7 +133,7 @@ docker-compose up -d
 #### 5. Direct Assessment Mode
 ```bash
 # Run immediate assessment
-python3 hackgpt_v2.py \
+python3 advance_hackgpt.py \
   --target example.com \
   --scope "Web application and API" \
   --auth-key "ENTERPRISE-2025-AUTH" \
@@ -310,7 +310,7 @@ ELASTICSEARCH_ENDPOINT=http://localhost:9200
 ### 1. Command Line Interface (CLI)
 ```bash
 # Interactive enterprise mode
-python3 hackgpt_v2.py
+python3 advance_hackgpt.py
 
 # Available options:
 # 1. Full Enterprise Pentest (All 6 Phases)
@@ -328,7 +328,7 @@ python3 hackgpt_v2.py
 ### 2. REST API Server
 ```bash
 # Start API server
-python3 hackgpt_v2.py --api
+python3 advance_hackgpt.py --api
 
 # Available endpoints:
 # GET  /api/health - Health check
@@ -342,7 +342,7 @@ python3 hackgpt_v2.py --api
 ### 3. Web Dashboard
 ```bash
 # Start web dashboard
-python3 hackgpt_v2.py --web
+python3 advance_hackgpt.py --web
 
 # Features:
 # - Real-time assessment monitoring
@@ -356,7 +356,7 @@ python3 hackgpt_v2.py --web
 ### 4. Voice Commands (Enterprise)
 ```bash
 # Voice command mode
-python3 hackgpt_v2.py --voice
+python3 advance_hackgpt.py --voice
 
 # Supported commands:
 # "Start enterprise assessment of example.com"
@@ -447,13 +447,13 @@ kubectl apply -f k8s/
 ### Multi-Cloud Deployment
 ```bash
 # Deploy to AWS
-python3 hackgpt_v2.py --deploy aws
+python3 advance_hackgpt.py --deploy aws
 
 # Deploy to Azure  
-python3 hackgpt_v2.py --deploy azure
+python3 advance_hackgpt.py --deploy azure
 
 # Deploy to GCP
-python3 hackgpt_v2.py --deploy gcp
+python3 advance_hackgpt.py --deploy gcp
 ```
 
 ## 🧪 Testing & Development
@@ -732,9 +732,16 @@ HackGPT Enterprise is designed for authorized security testing only:
   </p>
   
   <p>
-    <strong>Founder & Lead Developer:</strong><br>
-    <a href="https://github.com/yashab-cyber">🔧 Yashab Alam GitHub</a> |
-    <a href="https://www.instagram.com/yashab.alam">📸 Personal Instagram</a> |
-    <a href="https://www.linkedin.com/in/yashab-alam">💼 LinkedIn Profile</a>
+    <strong>Founder & Lead Developer:</strong> Yashab Alam<br>
+    <a href="https://github.com/yashab-cyber">🔧 GitHub</a> |
+    <a href="https://www.instagram.com/yashabcyber">📸 Instagram</a> |
+    <a href="https://x.com/Yashab_cyber">🐦 X (Twitter)</a> |
+    <a href="https://www.linkedin.com/in/yashab-alam">💼 LinkedIn</a> |
+    <a href="https://www.threads.com/@yashabcyber">🧵 Threads</a>
+  </p>
+  
+  <p>
+    <strong>Email Contacts:</strong><br>
+    📧 <a href="mailto:yashabalam9@gmail.com">yashabalam9@gmail.com</a> | 📧 <a href="mailto:yashabalam707@gmail.com">yashabalam707@gmail.com</a>
   </p>
 </div>
