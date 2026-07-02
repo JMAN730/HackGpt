@@ -181,4 +181,5 @@ Yashab Alam
 - **X (Twitter)**: [https://x.com/Yashab_cyber](https://x.com/Yashab_cyber)
 - **LinkedIn**: [https://www.linkedin.com/in/yashab-alam](https://www.linkedin.com/in/yashab-alam)
 - **Threads**: [https://www.threads.com/@yashabcyber](https://www.threads.com/@yashabcyber)
+- **Discord**: [https://discord.gg/eXPjM3Hxwb](https://discord.gg/eXPjM3Hxwb)
 - **Email**: yashabalam9@gmail.com | yashabalam707@gmail.com

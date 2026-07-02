@@ -192,6 +192,7 @@ All payment methods are verified and legitimate. For security concerns:
 - **Email:** yashabalam707@gmail.com
 - **GitHub Issues:** [HackGPT Repository](https://github.com/yashab-cyber/HackGPT)
 - **WhatsApp:** [Business Channel](https://whatsapp.com/channel/0029Vaoa1GfKLaHlL0Kc8k1q)
+- **Discord:** [Discussion Server](https://discord.gg/eXPjM3Hxwb)
 
 
 

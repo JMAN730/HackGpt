@@ -718,7 +718,8 @@ HackGPT Enterprise is designed for authorized security testing only:
 
 <div align="center">
   <p>
-    <a href="https://whatsapp.com/channel/0029Vaoa1GfKLaHlL0Kc8k1q">💬 WhatsApp Business</a>
+    <a href="https://whatsapp.com/channel/0029Vaoa1GfKLaHlL0Kc8k1q">💬 WhatsApp Business</a> |
+    <a href="https://discord.gg/eXPjM3Hxwb">👾 Discord Channel</a>
   </p>
   
   <p>
