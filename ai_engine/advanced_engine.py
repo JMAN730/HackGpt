@@ -395,6 +395,7 @@ class AdvancedAIEngine:
         self.pattern_recognizer = PatternRecognizer()
         self.vulnerability_correlator = VulnerabilityCorrelator()
         
+        self.context_manager = None
         if session_id:
             self.context_manager = ContextManager(session_id)
         

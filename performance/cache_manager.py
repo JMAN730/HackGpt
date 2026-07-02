@@ -115,6 +115,7 @@ class MemoryCache(CacheBackend):
             
             if entry.is_expired():
                 del self.cache[key]
+                self.stats.memory_usage -= entry.size_bytes
                 self.stats.misses += 1
                 self.stats.evictions += 1
                 return None
@@ -148,7 +149,12 @@ class MemoryCache(CacheBackend):
                 # Evict if necessary
                 if key not in self.cache and len(self.cache) >= self.max_size:
                     self._evict_lru()
-                
+
+                # Account for the bytes of any entry being replaced
+                existing = self.cache.get(key)
+                if existing is not None:
+                    self.stats.memory_usage -= existing.size_bytes
+
                 self.cache[key] = entry
                 self.stats.sets += 1
                 self.stats.memory_usage += size_bytes
