@@ -35,8 +35,11 @@ import uuid
 from typing import Dict, List, Any, Optional, Union
 
 # Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # Core imports
 try:
