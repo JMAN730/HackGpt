@@ -4,7 +4,7 @@ from .model_registry import (
     get_model_info, list_all_models, get_models_by_provider,
     get_available_providers
 )
-from .providers import ProviderFactory, BaseProvider
+from .providers import ProviderFactory, BaseProvider, LiteLLMProvider
 
 
 def get_advanced_ai_engine(model_id: str = None, provider: str = None):
@@ -28,4 +28,5 @@ __all__ = [
     'get_available_providers',
     'ProviderFactory',
     'BaseProvider',
+    'LiteLLMProvider',
 ]

@@ -36,6 +36,7 @@ class ModelProvider(Enum):
     LOCAL = "local"
     OPENROUTER = "openrouter"
     GLM = "glm"
+    LITELLM = "litellm"
 
 
 # ---------------------------------------------------------------------------
@@ -303,6 +304,34 @@ MODEL_CATALOG: Dict[str, ModelInfo] = {
         context_window=128_000,
         description="Automatic model routing via the OpenRouter aggregator.",
     ),
+
+    # ----- LiteLLM (AI Gateway) ------------------------------------------
+    "litellm/anthropic/claude-sonnet-4-20250514": ModelInfo(
+        model_id="anthropic/claude-sonnet-4-20250514",
+        provider=ModelProvider.LITELLM,
+        display_name="Claude Sonnet 4 (via LiteLLM)",
+        max_tokens=16_384,
+        supports_tools=True,
+        context_window=200_000,
+        description="Anthropic Claude Sonnet 4 routed through the LiteLLM AI gateway.",
+    ),
+    "litellm/gpt-4o": ModelInfo(
+        model_id="gpt-4o",
+        provider=ModelProvider.LITELLM,
+        display_name="GPT-4o (via LiteLLM)",
+        max_tokens=4_096,
+        supports_tools=True,
+        context_window=128_000,
+        description="OpenAI GPT-4o routed through the LiteLLM AI gateway.",
+    ),
+    "litellm/gemini/gemini-2.5-flash": ModelInfo(
+        model_id="gemini/gemini-2.5-flash",
+        provider=ModelProvider.LITELLM,
+        display_name="Gemini 2.5 Flash (via LiteLLM)",
+        max_tokens=65_536,
+        context_window=1_000_000,
+        description="Google Gemini 2.5 Flash routed through the LiteLLM AI gateway.",
+    ),
 }
 
 
@@ -345,6 +374,11 @@ _PROVIDER_META: Dict[ModelProvider, Dict[str, Any]] = {
         "name": "GLM (Zhipu AI)",
         "description": "GLM series models from Zhipu AI.",
         "required_env_vars": ["GLM_API_KEY"],
+    },
+    ModelProvider.LITELLM: {
+        "name": "LiteLLM",
+        "description": "Unified AI gateway supporting 100+ LLM providers via a single interface.",
+        "required_env_vars": ["LITELLM_API_KEY"],
     },
 }
 

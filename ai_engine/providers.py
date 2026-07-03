@@ -41,6 +41,7 @@ __all__ = [
     "GLMProvider",
     "OllamaProvider",
     "OpenRouterProvider",
+    "LiteLLMProvider",
     "ProviderFactory",
 ]
 
@@ -521,6 +522,81 @@ class OpenRouterProvider(BaseProvider):
 
 
 # ---------------------------------------------------------------------------
+# LiteLLM (unified AI gateway)
+# ---------------------------------------------------------------------------
+
+class LiteLLMProvider(BaseProvider):
+    """Provider client for the LiteLLM AI gateway.
+
+    LiteLLM provides a unified interface to 100+ LLM providers (OpenAI,
+    Anthropic, Google, Azure, Bedrock, Ollama, and more) using the OpenAI
+    request/response format.  Falls back to the ``LITELLM_API_KEY``
+    environment variable when no *api_key* is supplied explicitly.
+
+    Model identifiers use the LiteLLM format, e.g.
+    ``anthropic/claude-sonnet-4-20250514``, ``gpt-4o``,
+    ``gemini/gemini-2.5-flash``, ``azure/my-deployment``.
+    """
+
+    def __init__(self, api_key: str = None, base_url: str = None):
+        resolved_key = api_key or os.getenv("LITELLM_API_KEY")
+        resolved_url = base_url or os.getenv("LITELLM_API_BASE")
+        super().__init__(api_key=resolved_key, base_url=resolved_url)
+
+    def chat_completion(
+        self,
+        model_id: str,
+        messages: List[Dict[str, str]],
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+    ) -> str:
+        """Call an LLM via the LiteLLM unified gateway."""
+        try:
+            import litellm
+        except ImportError:
+            raise ImportError(
+                "The 'litellm' package is required for LiteLLMProvider. "
+                "Install it with: pip install litellm"
+            )
+
+        kwargs: Dict = {
+            "model": model_id,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "drop_params": True,
+        }
+        if self.api_key:
+            kwargs["api_key"] = self.api_key
+        if self.base_url:
+            kwargs["api_base"] = self.base_url
+
+        try:
+            response = litellm.completion(**kwargs)
+            return response.choices[0].message.content
+        except Exception as exc:
+            logger.error("LiteLLM chat completion failed: %s", exc)
+            raise
+
+    def is_available(self) -> bool:
+        """Available when an API key or provider-specific env var is set."""
+        if self.api_key:
+            return True
+        check_vars = [
+            "OPENAI_API_KEY",
+            "ANTHROPIC_API_KEY",
+            "GEMINI_API_KEY",
+            "AZURE_API_KEY",
+            "LITELLM_API_KEY",
+        ]
+        return any(os.getenv(v) for v in check_vars)
+
+    @property
+    def provider_name(self) -> str:
+        return "LiteLLM"
+
+
+# ---------------------------------------------------------------------------
 # Provider Factory
 # ---------------------------------------------------------------------------
 
@@ -533,6 +609,7 @@ _PROVIDER_CLASS_MAP: Dict[ModelProvider, type] = {
     ModelProvider.GLM: GLMProvider,
     ModelProvider.LOCAL: OllamaProvider,
     ModelProvider.OPENROUTER: OpenRouterProvider,
+    ModelProvider.LITELLM: LiteLLMProvider,
 }
 
 
