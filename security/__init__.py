@@ -14,6 +14,26 @@ from .compliance import (
     ComplianceMapping,
     ComplianceGap
 )
+from .soc_analysis import (
+    AdvancedSOCAnalyzer,
+    get_soc_analyzer,
+    ThreatSeverity,
+    LogFormat,
+    SOCAlert,
+    NormalizedLogEntry,
+    IOCResult,
+    AnomalyResult,
+    IncidentTimeline,
+    Playbook,
+    SOCAnalysisReport,
+    SIEMConnectorType,
+    SIEMConnector,
+    SplunkConnector,
+    QRadarConnector,
+    ElasticsearchConnector,
+    WebhookConnector,
+    SIEMConnectorManager
+)
 
 __all__ = [
     'EnterpriseAuth',
@@ -27,5 +47,24 @@ __all__ = [
     'AuthResult',
     'ComplianceFramework',
     'ComplianceMapping',
-    'ComplianceGap'
+    'ComplianceGap',
+    'AdvancedSOCAnalyzer',
+    'get_soc_analyzer',
+    'ThreatSeverity',
+    'LogFormat',
+    'SOCAlert',
+    'NormalizedLogEntry',
+    'IOCResult',
+    'AnomalyResult',
+    'IncidentTimeline',
+    'Playbook',
+    'SOCAnalysisReport',
+    'SIEMConnectorType',
+    'SIEMConnector',
+    'SplunkConnector',
+    'QRadarConnector',
+    'ElasticsearchConnector',
+    'WebhookConnector',
+    'SIEMConnectorManager'
 ]
+

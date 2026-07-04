@@ -65,14 +65,28 @@ _internal = {
         "AuditLog",
         "AIContext",
     ],
-    "security": ["EnterpriseAuth", "ComplianceFrameworkMapper"],
+    "security": [
+        "EnterpriseAuth", "ComplianceFrameworkMapper", "get_soc_analyzer",
+        "AdvancedSOCAnalyzer", "ThreatSeverity", "LogFormat", "SOCAlert",
+        "NormalizedLogEntry", "IOCResult", "AnomalyResult", "IncidentTimeline",
+        "Playbook", "SOCAnalysisReport", "SIEMConnectorType", "SIEMConnector",
+        "SplunkConnector", "QRadarConnector", "ElasticsearchConnector",
+        "WebhookConnector", "SIEMConnectorManager"
+    ],
     "exploitation": ["AdvancedExploitationEngine", "ZeroDayDetector"],
     "reporting": ["DynamicReportGenerator", "get_realtime_dashboard"],
     "cloud": ["DockerManager", "KubernetesManager", "ServiceRegistry"],
     "performance": ["get_cache_manager", "get_parallel_processor"],
 }
 for pkg, names in _internal.items():
-    mod = _stub(pkg)
+    try:
+        # Try importing the real package if it exists locally
+        import importlib
+        mod = importlib.import_module(pkg)
+    except ImportError:
+        mod = _stub(pkg)
     for sym in names:
-        setattr(mod, sym, MagicMock())
+        if not hasattr(mod, sym):
+            setattr(mod, sym, MagicMock())
+
 

