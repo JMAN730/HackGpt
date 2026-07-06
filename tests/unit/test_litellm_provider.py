@@ -160,6 +160,7 @@ def test_import_error_when_litellm_missing(monkeypatch):
 # Edge-case tests
 # ---------------------------------------------------------------------------
 
+
 def _make_litellm_stub(monkeypatch):
     """Helper: install a fake litellm module and return it."""
     fake = types.ModuleType("litellm")
